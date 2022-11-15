@@ -3,8 +3,60 @@ def poker(hands):
     return max(hands, key=hand_rank)
 
 
+def card_ranks(hand) -> list:
+    """returns an ORDERED tuple of the ranks
+    in a hand (where the order goes from
+    highest to lowest rank)"""
+    return []
+
+
+def straight(ranks) -> int:
+    "returns True if the hand is a straight"
+    return 0
+
+
+def flush(hand) -> bool:
+    "returns True if the hand is a flush"
+    return True
+
+
+def kind(no_of_items, ranks) -> int:
+    """returns the first rank that the hand has
+    exactly n of. For A hand with 4 sevens
+    this function would return 7"""
+    return 0
+
+
+def two_pair(ranks):
+    """if there is a two pair, this function
+    returns their corresponding ranks as a
+    tuple. For example, a hand with 2 twos
+    and 2 fours would cause this function
+    to return (4, 2)"""
+    return 0
+
+
 def hand_rank(hand):
-    return None  # we will be changing this later.
+    """Return a value indicating the rank of a hand"""
+    ranks = card_ranks(hand)
+    if straight(ranks) and flush(hand):  # straight flush
+        return (8, max(ranks))
+    elif kind(4, ranks):  # 4 of a kind
+        return (7, kind(4, ranks), kind(1, ranks))
+    elif kind(3, ranks) and kind(2, ranks):  # full house
+        return (6, kind(3, ranks), kind(2, ranks))
+    elif flush(hand):  # flush
+        return (5, card_ranks(hand))
+    elif straight(ranks):  # straight
+        return (4, card_ranks(hand))
+    elif kind(3, ranks):  # 3 of a kind
+        return (3, kind(3, ranks), card_ranks(hand))
+    elif two_pair(ranks):  # 2 pair
+        return (2, kind(2, ranks))
+    elif kind(2, ranks):  # kind
+        return (1, kind(2, ranks), card_ranks(hand))
+    else:  # high card
+        return (0, card_ranks(hand))
 
 
 def test() -> None:
@@ -19,6 +71,11 @@ def test() -> None:
     # Border cases
     assert poker([sf]) == sf
     assert poker([sf for i in range(100)]) == sf
+
+    # hand_rank tests
+    assert hand_rank(sf) == (8, 10)
+    assert hand_rank(fk) == (7, 9, 7)
+    assert hand_rank(fh) == (6, 10, 7)
 
     print("tests pass")
 
