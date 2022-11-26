@@ -10,17 +10,25 @@ def card_ranks(hand) -> list:
     """returns an ORDERED tuple of the ranks
     in a hand (where the order goes from
     highest to lowest rank)"""
-    return []
+    rank_mapping = {"T": "10", "J": "11", "Q": "12", "K": "13", "A": "14"}
+    ranks = [r for r, s in hand]
+    for r in ranks:
+        if r in rank_mapping.keys():
+            id = ranks.index(r)
+            ranks[id] = rank_mapping[r]
+    ranks = [int(r) for r in ranks]
+    ranks.sort(reverse=True)
+    return ranks
 
 
 def straight(ranks) -> int:
     "returns True if the hand is a straight"
-    return 0
+    return ranks == range(ranks[0], ranks[0]-5, -1)
 
 
 def flush(hand) -> bool:
     "returns True if the hand is a flush"
-    return True
+    return len(set(s for r, s in hand)) == 1
 
 
 def kind(no_of_items, ranks) -> int:
