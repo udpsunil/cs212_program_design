@@ -1,8 +1,7 @@
 # Lesson 1 : Section 15
 
-
 def poker(hands):
-    "Return the best hand: poker([hand,...]) => hand"
+    """Return the best hand: poker([hand,...]) => hand"""
     return max(hands, key=hand_rank)
 
 
@@ -14,28 +13,30 @@ def card_ranks(hand) -> list:
     ranks = [r for r, s in hand]
     for r in ranks:
         if r in rank_mapping.keys():
-            id = ranks.index(r)
-            ranks[id] = rank_mapping[r]
+            index = ranks.index(r)
+            ranks[index] = rank_mapping[r]
     ranks = [int(r) for r in ranks]
     ranks.sort(reverse=True)
     return ranks
 
 
 def straight(ranks) -> int:
-    "returns True if the hand is a straight"
-    return ranks == range(ranks[0], ranks[0]-5, -1)
+    """returns True if the hand is a straight"""
+    return ranks == list(range(ranks[0], ranks[0] - 5, -1))
 
 
 def flush(hand) -> bool:
-    "returns True if the hand is a flush"
+    """returns True if the hand is a flush"""
     return len(set(s for r, s in hand)) == 1
 
 
-def kind(no_of_items, ranks) -> int:
+def kind(no_of_items, ranks) -> any:
     """returns the first rank that the hand has
     exactly n of. For A hand with 4 sevens
     this function would return 7"""
-    return 0
+    for r in ranks:
+        if ranks.count(r) == no_of_items: return r
+    return None
 
 
 def two_pair(ranks):
@@ -44,34 +45,37 @@ def two_pair(ranks):
     tuple. For example, a hand with 2 twos
     and 2 fours would cause this function
     to return (4, 2)"""
-    return 0
+    pair = []
+    for r in set(ranks):
+        pair.append(kind(2, r))
+    return sorted(pair)
 
 
 def hand_rank(hand):
     """Return a value indicating the rank of a hand"""
     ranks = card_ranks(hand)
     if straight(ranks) and flush(hand):  # straight flush
-        return (8, max(ranks))
+        return 8, max(ranks)
     elif kind(4, ranks):  # 4 of a kind
-        return (7, kind(4, ranks), kind(1, ranks))
+        return 7, kind(4, ranks), kind(1, ranks)
     elif kind(3, ranks) and kind(2, ranks):  # full house
-        return (6, kind(3, ranks), kind(2, ranks))
+        return 6, kind(3, ranks), kind(2, ranks)
     elif flush(hand):  # flush
-        return (5, card_ranks(hand))
+        return 5, card_ranks(hand)
     elif straight(ranks):  # straight
-        return (4, card_ranks(hand))
+        return 4, card_ranks(hand)
     elif kind(3, ranks):  # 3 of a kind
-        return (3, kind(3, ranks), card_ranks(hand))
+        return 3, kind(3, ranks), card_ranks(hand)
     elif two_pair(ranks):  # 2 pair
-        return (2, kind(2, ranks))
+        return 2, kind(2, ranks)
     elif kind(2, ranks):  # kind
-        return (1, kind(2, ranks), card_ranks(hand))
+        return 1, kind(2, ranks), card_ranks(hand)
     else:  # high card
-        return (0, card_ranks(hand))
+        return 0, card_ranks(hand)
 
 
 def test() -> None:
-    "Test cases for the functions in Poker program"
+    """Test cases for the functions in Poker program"""
     sf = "6C 7C 8C 9C TC".split()  # ['6C', '7C', '8C', '9C', 'TC']
     fk = "9D 9H 9S 9C 7D".split()
     fh = "TD TC TH 7C 7D".split()
@@ -81,7 +85,7 @@ def test() -> None:
 
     # Border cases
     assert poker([sf]) == sf
-    assert poker([sf for i in range(100)]) == sf
+    assert poker([sf for _ in range(100)]) == sf
 
     # hand_rank tests
     assert hand_rank(sf) == (8, 10)
