@@ -23,19 +23,35 @@ Analysis: Houses are present
 Properties -> Nationality, Colors, Pets, Drinks, Smokes
 Assignments -> Locations, next to, immediate right, first middle etc.
 """
-# First version - Brute Force
+# First version - Brute Force using generator expressions
 import itertools
 
-houses = [1, 2, 3, 4, 5]
-orderings = list(itertools.permutations(houses))
 
-for (red, green, ivory, yellow, blue) in orderings:
-    for (englishman, spaniard, ukrainian, japanese, norwegian) in orderings:
-        for (dog, snails, fox, horse, zebra) in orderings:
-            for (coffee, tea, milk, oj, water) in orderings:
-                for (oldgold, kools, chesterfields, luckystrike, parliaments) in orderings:
-                    if englishman == red:
-                        pass
+def zebra_puzzle():
+    """ Return a tuple (WATER, ZEBRA) indicating their house numbers. """
+
+    houses = first, _, middle, _, _ = [1, 2, 3, 4, 5]
+    orderings = list(itertools.permutations(houses))
+    return next((WATER, ZEBRA)
+                for (red, green, ivory, yellow, blue) in orderings
+                for (englishman, spaniard, ukrainian, japanese, norwegian) in orderings
+                for (dog, snails, fox, horse, ZEBRA) in orderings
+                for (coffee, tea, milk, oj, WATER) in orderings
+                for (oldgold, kools, chesterfields, luckystrike, parliaments) in orderings
+                if englishman is red
+                if spaniard is dog
+                if coffee is green
+                if ukrainian is tea
+                if is_right_of(green, ivory)
+                if oldgold is snails
+                if kools is yellow
+                if milk == middle
+                if norwegian == first
+                if is_next_to(chesterfields, fox)
+                if is_next_to(kools, horse)
+                if luckystrike is oj
+                if japanese is parliaments
+                if is_next_to(norwegian, blue))
 
 
 def is_right_of(h1, h2):
@@ -46,3 +62,6 @@ def is_right_of(h1, h2):
 def is_next_to(h1, h2):
     """ Two houses are next to each other if they differ by 1. """
     return abs(h1 - h2) == 1
+
+
+print(zebra_puzzle())
