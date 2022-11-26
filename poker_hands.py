@@ -12,7 +12,7 @@ def card_ranks(hand) -> list:
     rank_mapping = {"T": "10", "J": "11", "Q": "12", "K": "13", "A": "14"}
     ranks = [r for r, s in hand]
     for r in ranks:
-        if r in rank_mapping.keys():
+        if r in rank_mapping:
             index = ranks.index(r)
             ranks[index] = rank_mapping[r]
     ranks = [int(r) for r in ranks]
@@ -27,16 +27,14 @@ def straight(ranks) -> int:
 
 def flush(hand) -> bool:
     """returns True if the hand is a flush"""
-    return len(set(s for r, s in hand)) == 1
+    return len({s for r, s in hand}) == 1
 
 
 def kind(no_of_items, ranks) -> any:
     """returns the first rank that the hand has
     exactly n of. For A hand with 4 sevens
     this function would return 7"""
-    for r in ranks:
-        if ranks.count(r) == no_of_items: return r
-    return None
+    return next((r for r in ranks if ranks.count(r) == no_of_items), None)
 
 
 def two_pair(ranks):
@@ -45,9 +43,7 @@ def two_pair(ranks):
     tuple. For example, a hand with 2 twos
     and 2 fours would cause this function
     to return (4, 2)"""
-    pair = []
-    for r in set(ranks):
-        pair.append(kind(2, r))
+    pair = [kind(2, r) for r in set(ranks)]
     return sorted(pair)
 
 
