@@ -36,3 +36,13 @@ for (red, green, ivory, yellow, blue) in orderings:
                 for (oldgold, kools, chesterfields, luckystrike, parliaments) in orderings:
                     if englishman == red:
                         pass
+
+
+def is_right_of(h1, h2):
+    """ House h1 is immediately right of h2 if h1 - h2 == 1. """
+    return h1 - h2 == 1
+
+
+def is_next_to(h1, h2):
+    """ Two houses are next to each other if they differ by 1. """
+    return abs(h1 - h2) == 1
